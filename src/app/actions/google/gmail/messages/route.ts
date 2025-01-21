@@ -64,7 +64,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error("Error retrieving emails:", error);
-    if (error?.status === 401) {
+    if ((error as { status: number })?.status === 401) {
       return new Response(JSON.stringify({ error: "Invalid Credentials" }), {
         status: 401,
         headers: {

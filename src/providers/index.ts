@@ -1,6 +1,5 @@
 import { OAuth2Client } from "google-auth-library";
 import { config, type ProviderConfig } from "@/config";
-import { google } from "googleapis";
 
 interface AuthProvider {
   generateAuthUrl(options: Record<string, string>): string;
