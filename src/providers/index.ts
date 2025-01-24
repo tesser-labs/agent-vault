@@ -60,8 +60,71 @@ class GoogleOAuth implements AuthProvider {
   }
 }
 
+class ShopifyOAuth implements AuthProvider {
+  store = "tesser-test.myshopify.com";
+  authorizationEndpoint = `https://${this.store}/admin/oauth/authorize`;
+  tokenEndpoint = `https://${this.store}/admin/oauth/access_token`;
+
+  scopes: string[];
+  clientId: string;
+  redirectUri: string;
+  clientSecret: string;
+
+  constructor(shopifyConfig: ProviderConfig = config.providers.shopify) {
+    const { clientId, scopes, clientSecret, redirectUri } = shopifyConfig;
+    if (!clientId || !redirectUri || !clientSecret) {
+      throw new Error("Missing Shopify OAuth2 credentials");
+    }
+    this.clientId = clientId;
+    this.scopes = scopes ? [...scopes] : [];
+    this.redirectUri = redirectUri;
+    this.clientSecret = clientSecret;
+  }
+
+  generateAuthUrl(options: Record<string, string>) {
+    const authUrl = new URL(this.authorizationEndpoint);
+    authUrl.searchParams.set("client_id", this.clientId);
+    authUrl.searchParams.set("scope", this.scopes.join(","));
+    authUrl.searchParams.set("redirect_uri", this.redirectUri);
+    authUrl.searchParams.set("state", options.state || "nonce");
+    console.log(authUrl.toString());
+    return authUrl.toString();
+  }
+
+  async getAccessToken(code: string): Promise<Credentials | undefined> {
+    try {
+      if (!code) {
+        throw new Error("No code provided");
+      }
+
+      // Exchange the authorization code for an access token
+      const tokenUrl = new URL(this.tokenEndpoint);
+      console.log(tokenUrl.toString());
+      const tokenResponse = await fetch(this.tokenEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          client_id: this.clientId,
+          client_secret: this.clientSecret,
+          code,
+        }),
+      });
+      const tokenData = await tokenResponse.json();
+      return {
+        access_token: tokenData.access_token,
+      };
+    } catch (error) {
+      console.error("Error exchanging code for token", error);
+      throw new Error("Error exchanging code for token");
+    }
+  }
+}
+
 const authProviders: Record<string, AuthProvider> = {
   google: new GoogleOAuth(),
+  shopify: new ShopifyOAuth(),
 };
 
 export { authProviders };

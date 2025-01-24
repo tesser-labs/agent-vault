@@ -21,6 +21,20 @@ export const config: Config = {
       redirectUri: process.env.GOOGLE_REDIRECT_URI!,
       scopes: ["https://www.googleapis.com/auth/gmail.modify"],
     },
+    shopify: {
+      clientId: process.env.SHOPIFY_CLIENT_ID!,
+      clientSecret: process.env.SHOPIFY_CLIENT_SECRET!,
+      redirectUri: process.env.SHOPIFY_REDIRECT_URI!,
+      // https://shopify.dev/docs/api/usage/access-scopes#authenticated-access-scopes
+      scopes: [
+        "read_products",
+        "write_products",
+        "read_orders",
+        "write_orders",
+        "read_customers",
+        "write_customers",
+      ],
+    },
   },
   storage: {
     basePath: "./store",
