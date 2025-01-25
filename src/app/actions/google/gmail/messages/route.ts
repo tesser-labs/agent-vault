@@ -3,34 +3,33 @@ import { google } from "googleapis";
 import { getTokenStorageKey } from "@/cache/session";
 import tokenStore from "@/cache/token";
 
-const RESOURCE = "google";
+const PROVIDER = "google";
 
 export async function GET(req: NextRequest) {
-  console.log([...tokenStore.keys()]);
-  const searchParams = req.nextUrl.searchParams;
-  const maxResults = searchParams.get("limit") || 10;
-  const udid = searchParams.get("udid");
-  if (!udid) {
-    return new Response(JSON.stringify({ error: "udid is required" }), {
-      status: 400,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
-  // check if user already has a token
-  const tokenStorageKey = getTokenStorageKey(udid as string, RESOURCE);
-  console.log("tokenStorageKey", tokenStorageKey);
-  const tokens = tokenStore.get(tokenStorageKey);
-  if (!tokens || !tokens.access_token) {
-    return new Response(JSON.stringify({ error: "No access token found" }), {
-      status: 401,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
   try {
+    const searchParams = req.nextUrl.searchParams;
+    const udid = searchParams.get("udid");
+    if (!udid) {
+      return new Response(JSON.stringify({ error: "udid is required" }), {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    // check if user already has a token
+    const tokenStorageKey = getTokenStorageKey(udid as string, PROVIDER);
+    const tokens = tokenStore.get(tokenStorageKey);
+    if (!tokens || !tokens.access_token) {
+      return new Response(JSON.stringify({ error: "No access token found" }), {
+        status: 401,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    const maxResults = searchParams.get("limit") || 10;
     const oauth2Client = new google.auth.OAuth2();
     const { access_token } = tokens;
     oauth2Client.setCredentials({ access_token });

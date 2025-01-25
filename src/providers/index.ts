@@ -1,9 +1,16 @@
 import { OAuth2Client } from "google-auth-library";
 import { config, type ProviderConfig } from "@/config";
 
+export interface AuthUrlOptions {
+  state?: string;
+  resource?: string;
+}
 interface AuthProvider {
-  generateAuthUrl(options: Record<string, string>): string;
-  getAccessToken(code: string): Promise<Credentials | undefined>;
+  generateAuthUrl(options?: AuthUrlOptions): string;
+  getAccessToken(
+    code: string,
+    options?: AuthUrlOptions
+  ): Promise<Credentials | undefined>;
 }
 
 export interface Credentials {
@@ -14,7 +21,8 @@ export interface Credentials {
 
 export interface AuthSession {
   id: string;
-  resource: string;
+  provider: string;
+  resource?: string;
   udid: string;
   redirectUrl: string;
 }
@@ -41,7 +49,7 @@ class GoogleOAuth implements AuthProvider {
     this.scopes = [...SCOPES];
   }
 
-  generateAuthUrl(options: Record<string, string>) {
+  generateAuthUrl(options: AuthUrlOptions) {
     const authorizeUrl = this.oauth2Client.generateAuthUrl({
       access_type: "offline",
       scope: this.scopes,
@@ -61,9 +69,10 @@ class GoogleOAuth implements AuthProvider {
 }
 
 class ShopifyOAuth implements AuthProvider {
-  store = "tesser-test.myshopify.com";
-  authorizationEndpoint = `https://${this.store}/admin/oauth/authorize`;
-  tokenEndpoint = `https://${this.store}/admin/oauth/access_token`;
+  getAuthorizationEndpoint = (store) =>
+    `https://${store}.myshopify.com/admin/oauth/authorize`;
+  getTokenEndpoint = (store) =>
+    `https://${store}.myshopify.com/admin/oauth/access_token`;
 
   scopes: string[];
   clientId: string;
@@ -81,26 +90,36 @@ class ShopifyOAuth implements AuthProvider {
     this.clientSecret = clientSecret;
   }
 
-  generateAuthUrl(options: Record<string, string>) {
-    const authUrl = new URL(this.authorizationEndpoint);
+  generateAuthUrl(options: AuthUrlOptions) {
+    const { resource: store, state } = options;
+    if (!store) {
+      throw new Error('Missing resource. "resource" option is required');
+    }
+    const authUrl = new URL(this.getAuthorizationEndpoint(store));
     authUrl.searchParams.set("client_id", this.clientId);
     authUrl.searchParams.set("scope", this.scopes.join(","));
     authUrl.searchParams.set("redirect_uri", this.redirectUri);
-    authUrl.searchParams.set("state", options.state || "nonce");
-    console.log(authUrl.toString());
+    authUrl.searchParams.set("state", state || "nonce");
     return authUrl.toString();
   }
 
-  async getAccessToken(code: string): Promise<Credentials | undefined> {
+  async getAccessToken(
+    code: string,
+    options: AuthUrlOptions
+  ): Promise<Credentials | undefined> {
     try {
+      const { resource: store } = options || {};
+      if (!store) {
+        throw new Error("Missing resource. 'resource' option is required");
+      }
       if (!code) {
         throw new Error("No code provided");
       }
 
       // Exchange the authorization code for an access token
-      const tokenUrl = new URL(this.tokenEndpoint);
-      console.log(tokenUrl.toString());
-      const tokenResponse = await fetch(this.tokenEndpoint, {
+      const tokenUrl = new URL(this.getTokenEndpoint(store));
+
+      const tokenResponse = await fetch(tokenUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

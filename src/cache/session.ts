@@ -4,9 +4,13 @@ import { AuthSession } from "@/providers";
 
 const BASE_PATH = "./.store/sessions";
 
-export function getTokenStorageKey(udid: string, resource: string) {
+export function getTokenStorageKey(
+  udid: string,
+  provider: string,
+  resource?: string
+) {
   //ToDo: retrieve the proper key for the user (AgentDID-UserDID-Resource)
-  return decodeURIComponent(`${udid}-${resource}`);
+  return decodeURIComponent(`${udid}-${provider}-${resource || "root"}`);
 }
 
 class SessionManager<T> {

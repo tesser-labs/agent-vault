@@ -3,8 +3,10 @@ import { redirect } from "next/navigation";
 import sessionManager from "@/cache/session";
 
 export default async function Page({
+  params,
   searchParams,
 }: {
+  params: Promise<{ provider: string }>;
   searchParams: Promise<{
     resource?: string;
     udid: string;
@@ -12,17 +14,19 @@ export default async function Page({
   }>;
 }) {
   const { resource, udid, redirectUrl } = await searchParams;
+  const { provider } = await params;
 
   // generate a session id as a random uuid
   const sessionId = crypto.randomUUID();
-  if (!resource || !udid || !redirectUrl) {
+  if (!provider || !udid || !redirectUrl) {
     // Handle the case when required query parameters are missing
     throw new Error(
-      "Missing required query parameters: resource or udid or redirectUrl"
+      "Missing required query parameters: provider or udid or redirectUrl"
     );
   } else {
     const session: AuthSession = {
       id: sessionId,
+      provider,
       resource,
       udid,
       redirectUrl,
@@ -32,13 +36,14 @@ export default async function Page({
     sessionManager.set(sessionId, session);
 
     // ToDO: check the credentials for the user DID to pull their available connections
-    const authUrl = authProviders[resource]?.generateAuthUrl({
+    const authUrl = authProviders[provider]?.generateAuthUrl({
       state: sessionId,
+      resource,
     });
     if (authUrl) {
       redirect(authUrl);
     } else {
-      throw new Error("Invalid resource type");
+      throw new Error("Invalid provider type");
     }
   }
   // Render a loading or error message while redirecting
