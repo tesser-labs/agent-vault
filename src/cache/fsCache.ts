@@ -3,17 +3,17 @@ import * as path from "path";
 import type { ICache } from "./type";
 
 export class FSCache<T> implements ICache<string, T> {
-  private basePath: string;
+  private baseDir: string;
 
-  constructor(basePath: string) {
-    this.basePath = basePath;
-    if (!fs.existsSync(this.basePath)) {
-      fs.mkdirSync(this.basePath, { recursive: true });
+  constructor(baseDir: string) {
+    this.baseDir = baseDir;
+    if (!fs.existsSync(this.baseDir)) {
+      fs.mkdirSync(this.baseDir, { recursive: true });
     }
   }
 
   private getFilePath(key: string): string {
-    return path.join(this.basePath, key);
+    return path.join(this.baseDir, key);
   }
 
   get(key: string): T | undefined {
@@ -27,6 +27,10 @@ export class FSCache<T> implements ICache<string, T> {
 
   set(key: string, value: T): void {
     const filePath = this.getFilePath(key);
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
     const data = JSON.stringify(value);
     fs.writeFileSync(filePath, data);
   }
@@ -41,7 +45,7 @@ export class FSCache<T> implements ICache<string, T> {
   }
 
   keys(): IterableIterator<string> {
-    const files = fs.readdirSync(this.basePath);
+    const files = fs.readdirSync(this.baseDir);
     return files.values() as IterableIterator<string>;
   }
 }
