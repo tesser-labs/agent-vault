@@ -18,6 +18,11 @@ class TokenManager<T> {
   delete(key: string): void {
     this.cache.delete(key);
   }
+  take(key: string): T | undefined {
+    const value = this.get(key);
+    this.delete(key);
+    return value;
+  }
   keys(): IterableIterator<string> {
     return this.cache.keys();
   }
