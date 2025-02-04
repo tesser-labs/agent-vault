@@ -33,7 +33,7 @@ export default async function Page({
     };
 
     // store the session in the database
-    sessionManager.set(sessionId, session);
+    await sessionManager.set(sessionId, session);
 
     // ToDO: check the credentials for the user DID to pull their available connections
     const authUrl = authProviders[provider]?.generateAuthUrl({

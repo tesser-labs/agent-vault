@@ -1,4 +1,5 @@
 import { FSCache } from "./fsCache";
+import { KVCache } from "./kvCache";
 import type { ICache } from "./type";
 import { AuthSession } from "@/providers";
 
@@ -18,23 +19,23 @@ class SessionManager<T> {
   constructor(cache: ICache<string, T>) {
     this.cache = cache;
   }
-  get(key: string): T | undefined {
+  async get(key: string): Promise<T | undefined> {
     return this.cache.get(key);
   }
-  set(key: string, value: T): void {
+  async set(key: string, value: T): Promise<void> {
     this.cache.set(key, value);
   }
-  delete(key: string): void {
+  async delete(key: string): Promise<void> {
     this.cache.delete(key);
   }
-  take(key: string): T | undefined {
-    const value = this.get(key);
-    this.delete(key);
+  async take(key: string): Promise<T | undefined> {
+    const value = await this.get(key);
+    await this.delete(key);
     return value;
   }
 }
 
 // export a singleton instance of SessionManager
-const sessionManager = new SessionManager<AuthSession>(new FSCache(BASE_PATH));
+const sessionManager = new SessionManager<AuthSession>(new KVCache("session"));
 console.log("renewed session manager");
 export default sessionManager;

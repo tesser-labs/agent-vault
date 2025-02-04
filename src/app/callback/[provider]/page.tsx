@@ -4,6 +4,8 @@ import sessionStore from "@/cache/session";
 import { redirect } from "next/navigation";
 import { getTokenStorageKey } from "@/cache/session";
 
+const TOKEN_EXPIRY_TIME = Number(process.env.TOKEN_EXPIRY_TIME) || undefined;
+
 export default async function callbackHandler({
   params,
   searchParams,
@@ -16,7 +18,7 @@ export default async function callbackHandler({
   const { provider } = await params;
 
   // take the pending auth session from the store
-  const authSession = sessionStore.take(state);
+  const authSession = await sessionStore.take(state);
 
   const {
     udid,
@@ -44,10 +46,13 @@ export default async function callbackHandler({
 
   // store the tokens
   if (tokens) {
-    const { access_token, refresh_token, expiry_date } = tokens;
-
+    let { access_token, refresh_token, expiry_date } = tokens;
+    // override expiry date if TOKEN_EXPIRY_TIME is set
+    expiry_date = TOKEN_EXPIRY_TIME
+      ? Math.floor(Date.now() + TOKEN_EXPIRY_TIME * 1000)
+      : expiry_date;
     const key = getTokenStorageKey(udid, provider, resource);
-    tokenStore.set(key, { access_token, refresh_token, expiry_date });
+    await tokenStore.set(key, { access_token, refresh_token, expiry_date });
     url.searchParams.set("result", "success");
   } else {
     url.searchParams.set("result", "error");

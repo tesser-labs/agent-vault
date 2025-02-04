@@ -1,6 +1,7 @@
 import { FSCache } from "./fsCache";
 import { ICache } from "./type";
 import { Credentials } from "@/providers";
+import { KVCache } from "./kvCache";
 
 const BASE_PATH = "./.store/tokens";
 
@@ -9,25 +10,25 @@ class TokenManager<T> {
   constructor(cache: ICache<string, T>) {
     this.cache = cache;
   }
-  get(key: string): T | undefined {
+  async get(key: string): Promise<T | undefined> {
     return this.cache.get(key);
   }
-  set(key: string, value: T): void {
+  async set(key: string, value: T): Promise<void> {
     this.cache.set(key, value);
   }
-  delete(key: string): void {
+  async delete(key: string): Promise<void> {
     this.cache.delete(key);
   }
-  take(key: string): T | undefined {
-    const value = this.get(key);
-    this.delete(key);
+  async take(key: string): Promise<T | undefined> {
+    const value = await this.get(key);
+    await this.delete(key);
     return value;
   }
-  keys(): IterableIterator<string> {
-    return this.cache.keys();
+  async *keys(): AsyncIterableIterator<string> {
+    yield* this.cache.keys();
   }
 }
 
 // export a singleton instance of SessionManager
-const tokenManager = new TokenManager<Credentials>(new FSCache(BASE_PATH));
+const tokenManager = new TokenManager<Credentials>(new KVCache("token"));
 export default tokenManager;

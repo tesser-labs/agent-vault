@@ -2,16 +2,16 @@ import type { ICache } from "./type";
 
 export class Memcache<key, value> implements ICache<key, value> {
   private cache: Map<key, value> = new Map();
-  get(key: key): value | undefined {
+  async get(key: key): Promise<value | undefined> {
     return this.cache.get(key);
   }
-  set(key: key, value: value): void {
+  async set(key: key, value: value): Promise<void> {
     this.cache.set(key, value);
   }
-  delete(key: key): boolean {
+  async delete(key: key): Promise<boolean> {
     return this.cache.delete(key);
   }
-  keys(): IterableIterator<key> {
-    return this.cache.keys();
+  async *keys(): AsyncIterableIterator<key> {
+    yield* this.cache.keys();
   }
 }

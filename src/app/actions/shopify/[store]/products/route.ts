@@ -22,8 +22,12 @@ export async function GET(
     }
     // check if user already has a token
     const tokenStorageKey = getTokenStorageKey(udid as string, PROVIDER, store);
-    const tokens = tokenStore.take(tokenStorageKey);
-    if (!tokens || !tokens.access_token) {
+    const tokens = await tokenStore.get(tokenStorageKey);
+    if (
+      !tokens ||
+      !tokens.access_token ||
+      (tokens.expiry_date && tokens.expiry_date < Date.now())
+    ) {
       return new Response(JSON.stringify({ error: "No access token found" }), {
         status: 401,
         headers: {

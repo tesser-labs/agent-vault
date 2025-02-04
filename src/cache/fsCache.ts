@@ -16,7 +16,7 @@ export class FSCache<T> implements ICache<string, T> {
     return path.join(this.baseDir, key);
   }
 
-  get(key: string): T | undefined {
+  async get(key: string): Promise<T | undefined> {
     const filePath = this.getFilePath(key);
     if (fs.existsSync(filePath)) {
       const data = fs.readFileSync(filePath, "utf8");
@@ -25,7 +25,7 @@ export class FSCache<T> implements ICache<string, T> {
     return undefined;
   }
 
-  set(key: string, value: T): void {
+  async set(key: string, value: T): Promise<void> {
     const filePath = this.getFilePath(key);
     const dir = path.dirname(filePath);
     if (!fs.existsSync(dir)) {
@@ -35,7 +35,7 @@ export class FSCache<T> implements ICache<string, T> {
     fs.writeFileSync(filePath, data);
   }
 
-  delete(key: string): boolean {
+  async delete(key: string): Promise<boolean> {
     const filePath = this.getFilePath(key);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
@@ -44,7 +44,7 @@ export class FSCache<T> implements ICache<string, T> {
     return false;
   }
 
-  keys(): IterableIterator<string> {
+  async *keys(): AsyncIterableIterator<string> {
     const files = fs.readdirSync(this.baseDir);
     return files.values() as IterableIterator<string>;
   }
