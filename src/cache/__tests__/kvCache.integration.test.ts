@@ -1,9 +1,8 @@
 import { KVCache } from "../kvCache";
 import { describe, expect, test, beforeEach, afterEach } from "@jest/globals";
 describe("KVCache Integration Tests", () => {
-  let cache: KVCache<any>;
+  let cache: KVCache<string | Record<string, string | number>>;
   const testPrefix = "test:";
-  console.log(process.env);
 
   beforeEach(() => {
     cache = new KVCache(testPrefix);

@@ -1,9 +1,9 @@
-import { FSCache } from "./fsCache";
+// import { FSCache } from "./fsCache";
 import { ICache } from "./type";
 import { Credentials } from "@/providers";
 import { KVCache } from "./kvCache";
 
-const BASE_PATH = "./.store/tokens";
+// const BASE_PATH = "./.store/tokens";
 
 class TokenManager<T> {
   private cache: ICache<string, T>;

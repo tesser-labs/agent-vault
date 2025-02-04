@@ -46,7 +46,8 @@ export default async function callbackHandler({
 
   // store the tokens
   if (tokens) {
-    let { access_token, refresh_token, expiry_date } = tokens;
+    const { access_token, refresh_token } = tokens;
+    let { expiry_date } = tokens;
     // override expiry date if TOKEN_EXPIRY_TIME is set
     expiry_date = TOKEN_EXPIRY_TIME
       ? Math.floor(Date.now() + TOKEN_EXPIRY_TIME * 1000)

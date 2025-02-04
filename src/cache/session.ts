@@ -1,9 +1,9 @@
-import { FSCache } from "./fsCache";
+// import { FSCache } from "./fsCache";
 import { KVCache } from "./kvCache";
 import type { ICache } from "./type";
 import { AuthSession } from "@/providers";
 
-const BASE_PATH = "./.store/sessions";
+// const BASE_PATH = "./.store/sessions";
 
 export function getTokenStorageKey(
   udid: string,
