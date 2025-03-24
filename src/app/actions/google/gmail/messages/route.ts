@@ -1,3 +1,5 @@
+export const maxDuration = 60;
+
 import type { NextRequest } from "next/server";
 import { google } from "googleapis";
 import { getTokenStorageKey } from "@/cache/session";
