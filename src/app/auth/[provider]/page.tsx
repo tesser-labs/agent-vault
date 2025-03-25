@@ -1,4 +1,4 @@
-import { authProviders, AuthSession } from "@/providers";
+import { authProviders, AuthSession } from "@/authProviders";
 import { redirect } from "next/navigation";
 import sessionManager from "@/cache/session";
 
@@ -8,27 +8,36 @@ export default async function Page({
 }: {
   params: Promise<{ provider: string }>;
   searchParams: Promise<{
+    "agent.name": string;
+    provider: string;
     resource?: string;
-    udid: string;
-    redirectUrl?: string;
+    service: string;
+    redirectUrl: string;
   }>;
 }) {
-  const { resource, udid, redirectUrl } = await searchParams;
+  const {
+    resource,
+    "agent.name": agentName,
+    service,
+    redirectUrl,
+  } = await searchParams;
   const { provider } = await params;
 
   // generate a session id as a random uuid
   const sessionId = crypto.randomUUID();
-  if (!provider || !udid || !redirectUrl) {
+  if (!provider || !agentName || !service || !redirectUrl) {
     // Handle the case when required query parameters are missing
     throw new Error(
-      "Missing required query parameters: provider or udid or redirectUrl"
+      "Missing required query parameters: provider or agentName or service or redirectUrl"
     );
   } else {
     const session: AuthSession = {
-      id: sessionId,
-      provider,
-      resource,
-      udid,
+      context: {
+        provider,
+        agent: { name: agentName },
+        resource,
+        service,
+      },
       redirectUrl,
     };
 

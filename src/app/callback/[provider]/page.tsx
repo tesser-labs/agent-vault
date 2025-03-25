@@ -1,9 +1,10 @@
-import { authProviders } from "@/providers";
+import { authProviders } from "@/authProviders";
 import tokenStore from "@/cache/token";
 import sessionStore from "@/cache/session";
 import { redirect } from "next/navigation";
 import { getTokenStorageKey } from "@/cache/session";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TOKEN_EXPIRY_TIME = Number(process.env.TOKEN_EXPIRY_TIME) || undefined;
 
 export default async function callbackHandler({
@@ -14,20 +15,24 @@ export default async function callbackHandler({
   searchParams: Promise<{ code: string; state: string }>;
 }) {
   const { code, state } = await searchParams;
+
   // get provider name from dynamic path slug
   const { provider } = await params;
 
   // take the pending auth session from the store
-  const authSession = await sessionStore.take(state);
+  const session = await sessionStore.take(state);
+  if (!session) throw new Error("No session found");
 
+  const { redirectUrl, context } = session;
   const {
-    udid,
-    redirectUrl,
+    user,
     provider: providerInSession,
     resource,
-  } = authSession || {};
+    service,
+    agent,
+  } = context;
 
-  if (!udid || !redirectUrl || providerInSession !== provider) {
+  if (!redirectUrl || providerInSession !== provider) {
     throw new Error("Invalid state");
   }
 
@@ -46,14 +51,26 @@ export default async function callbackHandler({
 
   // store the tokens
   if (tokens) {
-    const { access_token, refresh_token } = tokens;
-    let { expiry_date } = tokens;
+    const { access_token, refresh_token, expiry_date } = tokens;
     // override expiry date if TOKEN_EXPIRY_TIME is set
-    expiry_date = TOKEN_EXPIRY_TIME
-      ? Math.floor(Date.now() + TOKEN_EXPIRY_TIME * 1000)
-      : expiry_date;
-    const key = getTokenStorageKey(udid, provider, resource);
-    await tokenStore.set(key, { access_token, refresh_token, expiry_date });
+    // expiry_date = TOKEN_EXPIRY_TIME
+    //   ? Math.floor(Date.now() + TOKEN_EXPIRY_TIME * 1000)
+    //   : expiry_date;
+    const key = getTokenStorageKey({
+      agentName: agent?.name,
+      provider,
+      resource,
+    });
+    await tokenStore.set(key, {
+      provider,
+      resource,
+      ...(agent && { agent }),
+      ...(user && { user }),
+      ...(service && { service }),
+      access_token,
+      refresh_token,
+      expiry_date,
+    });
     url.searchParams.set("result", "success");
   } else {
     url.searchParams.set("result", "error");

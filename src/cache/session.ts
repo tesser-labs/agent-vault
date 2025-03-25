@@ -1,17 +1,23 @@
 // import { FSCache } from "./fsCache";
 import { KVCache } from "./kvCache";
-import type { ICache } from "./type";
-import { AuthSession } from "@/providers";
+import type { ICache } from "./types";
+import { AuthSession } from "@/authProviders";
 
 // const BASE_PATH = "./.store/sessions";
 
-export function getTokenStorageKey(
-  udid: string,
-  provider: string,
-  resource?: string
-) {
+export function getTokenStorageKey({
+  agentName,
+  provider,
+  resource,
+}: {
+  agentName?: string;
+  provider: string;
+  resource?: string;
+}) {
   //ToDo: retrieve the proper key for the user (AgentDID-UserDID-Resource)
-  return decodeURIComponent(`${udid}-${provider}-${resource || "root"}`);
+  return decodeURIComponent(
+    `${provider}-${resource || "all"}-${agentName || "all"}`
+  );
 }
 
 class SessionManager<T> {

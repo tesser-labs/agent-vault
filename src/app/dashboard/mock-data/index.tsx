@@ -1,4 +1,4 @@
-import { Connection } from "@/types";
+import { Connection } from "@/app/types";
 export const connectionsData: Connection[] = [
   {
     description: "Marketing Suite",

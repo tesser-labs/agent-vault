@@ -1,5 +1,5 @@
 import { kv } from "@vercel/kv";
-import type { ICache } from "./type";
+import type { ICache } from "./types";
 
 export class KVCache<T> implements ICache<string, T> {
   private prefix: string;

@@ -1,6 +1,6 @@
 // import { FSCache } from "./fsCache";
-import { ICache } from "./type";
-import { Credentials } from "@/providers";
+import { ICache } from "./types";
+import { Connection } from "@/authProviders/types";
 import { KVCache } from "./kvCache";
 
 // const BASE_PATH = "./.store/tokens";
@@ -30,5 +30,5 @@ class TokenManager<T> {
 }
 
 // export a singleton instance of SessionManager
-const tokenManager = new TokenManager<Credentials>(new KVCache("token"));
+const tokenManager = new TokenManager<Connection>(new KVCache("token"));
 export default tokenManager;

@@ -1,72 +1,9 @@
-import { OAuth2Client } from "google-auth-library";
+import {
+  AuthProvider,
+  AuthUrlOptions,
+  Credentials,
+} from "@/authProviders/types";
 import { config, type ProviderConfig } from "@/config";
-
-export interface AuthUrlOptions {
-  state?: string;
-  resource?: string;
-}
-interface AuthProvider {
-  generateAuthUrl(options?: AuthUrlOptions): string;
-  getAccessToken(
-    code: string,
-    options?: AuthUrlOptions
-  ): Promise<Credentials | undefined>;
-}
-
-export interface Credentials {
-  access_token: string;
-  refresh_token?: string;
-  expiry_date?: number;
-}
-
-export interface AuthSession {
-  id: string;
-  provider: string;
-  resource?: string;
-  udid: string;
-  redirectUrl: string;
-}
-
-class GoogleOAuth implements AuthProvider {
-  oauth2Client;
-  scopes: string[];
-  constructor(googleConfig: ProviderConfig = config.providers.google) {
-    const CLIENT_ID = googleConfig.clientId;
-    const CLIENT_SECRET = googleConfig.clientSecret;
-    const REDIRECT_URI = googleConfig.redirectUri;
-    const SCOPES = googleConfig.scopes;
-
-    if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
-      throw new Error("Missing Google OAuth2 credentials");
-    }
-
-    this.oauth2Client = new OAuth2Client(
-      CLIENT_ID,
-      CLIENT_SECRET,
-      REDIRECT_URI
-    );
-
-    this.scopes = [...SCOPES];
-  }
-
-  generateAuthUrl(options: AuthUrlOptions) {
-    const authorizeUrl = this.oauth2Client.generateAuthUrl({
-      access_type: "offline",
-      scope: this.scopes,
-      state: options.state,
-    });
-    return authorizeUrl;
-  }
-  async getAccessToken(code: string) {
-    const response = await this.oauth2Client.getToken(code);
-    const access_token = response.tokens?.access_token || undefined;
-    const refresh_token = response.tokens?.refresh_token || undefined;
-    const expiry_date = response.tokens?.expiry_date || undefined;
-    if (access_token) {
-      return { access_token, refresh_token, expiry_date };
-    }
-  }
-}
 
 class ShopifyOAuth implements AuthProvider {
   getAuthorizationEndpoint = (store) =>
@@ -141,9 +78,4 @@ class ShopifyOAuth implements AuthProvider {
   }
 }
 
-const authProviders: Record<string, AuthProvider> = {
-  google: new GoogleOAuth(),
-  shopify: new ShopifyOAuth(),
-};
-
-export { authProviders };
+export { ShopifyOAuth };

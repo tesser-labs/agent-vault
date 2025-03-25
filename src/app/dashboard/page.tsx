@@ -1,18 +1,34 @@
-"use client";
+import { Shield } from "lucide-react";
+import Dashboard from "./components/Dashboard";
+import tokenManager from "@/cache/token";
+import { Connection as ConnectionData } from "@/app/types";
+import { Suspense } from "react";
+async function getConnections() {
+  const connections: ConnectionData[] = [];
+  for await (const key of tokenManager.keys()) {
+    const connection = await tokenManager.get(key);
+    if (connection) {
+      const connectionData: ConnectionData = {
+        app: `${connection.provider}/${connection.resource}/${connection.service}`,
+        client: connection.agent?.name ?? "Unknown",
+        accessToken: connection.access_token,
+        refreshToken: connection.refresh_token ?? "",
+        expiration: connection.expiry_date
+          ? new Date(connection.expiry_date)
+          : "never",
+      };
+      connections.push(connectionData);
+    }
+  }
+  return connections;
+}
 
-import { useState } from "react";
-import { connectionsData } from "./mock-data";
-import FilterDropdown from "@/app/dashboard/components/FilterDropdown";
-import AccessTable from "@/app/dashboard/components/Table";
-import { Shield, Search } from "lucide-react";
-import { StatsSummary } from "./components/StatsSummary";
-
-export default function Dashboard() {
-  const [filter, setFilter] = useState("All Tokens");
-
+export default async function Page() {
+  // get all connections
+  const connections = getConnections();
   return (
     <div className="min-h-screen bg-background px-4 md:px-6">
-      <header className="border-b py-10 sticky top-0 z-10 bg-primary/10 mb-6 flex items-center justify-between">
+      <header className="border-b py-10 sticky top-0 z-10 bg-background/80 mb-6 flex items-center justify-between">
         <div className="flex items-center">
           <div className="text-primary mr-2">
             <Shield className="h-6 w-6" />
@@ -30,51 +46,9 @@ export default function Dashboard() {
           </button>
         </div>
       </header>
-
-      <div className="mt-6 flex flex-col md:flex-row gap-4">
-        <div className="relative flex-grow">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Search className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <input
-            type="text"
-            className="bg-background border border-secondary text-foreground text-sm rounded-lg focus:ring-primary focus:border-primary block w-full pl-10 p-2.5"
-            placeholder="Search by app, tool, or client..."
-          />
-        </div>
-        <FilterDropdown
-          selected={filter}
-          setSelected={setFilter}
-        />
-      </div>
-
-      <h2 className="text-lg font-medium mt-6 mb-4 text-foreground">
-        Connection Tokens
-      </h2>
-      <div className="mb-4">
-        <StatsSummary connectionsData={connectionsData} />
-      </div>
-      <div className="overflow-x-auto">
-        <AccessTable connectionsData={connectionsData} />
-      </div>
-
-      <div className="mt-8 border-t pt-6 text-sm text-muted-foreground flex justify-between">
-        <div>Access Management System © 2025</div>
-        <div className="flex gap-4">
-          <a
-            href="#"
-            className="hover:text-primary"
-          >
-            Documentation
-          </a>
-          <a
-            href="#"
-            className="hover:text-primary"
-          >
-            Support
-          </a>
-        </div>
-      </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Dashboard connections={connections} />
+      </Suspense>
     </div>
   );
 }

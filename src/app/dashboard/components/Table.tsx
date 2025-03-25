@@ -1,4 +1,4 @@
-import { Connection } from "@/types";
+import { Connection } from "@/app/types";
 import StatusIndicator from "@/app/dashboard/components/StatusIndicator";
 import { Link, Clock, Key } from "lucide-react";
 import { getTokenExpirationLabel } from "@/utils/token";

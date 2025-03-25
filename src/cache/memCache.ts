@@ -1,4 +1,4 @@
-import type { ICache } from "./type";
+import type { ICache } from "./types";
 
 export class Memcache<key, value> implements ICache<key, value> {
   private cache: Map<key, value> = new Map();

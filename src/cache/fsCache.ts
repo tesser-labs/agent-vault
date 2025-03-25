@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import type { ICache } from "./type";
+import type { ICache } from "./types";
 
 export class FSCache<T> implements ICache<string, T> {
   private baseDir: string;

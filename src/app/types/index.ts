@@ -1,10 +1,10 @@
 export interface Connection {
   app: string;
-  description: string;
+  description?: string;
   client: string;
   accessToken: string;
   refreshToken: string;
-  expiration: Date;
+  expiration: Date | "never";
 }
 
 export type TokenStatus = "valid" | "expiring" | "expired";

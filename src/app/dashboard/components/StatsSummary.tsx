@@ -1,5 +1,5 @@
 import { Activity, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
-import type { Connection } from "@/types";
+import type { Connection } from "@/app/types";
 import { getTokenStatus } from "@/utils/token";
 
 export function StatsSummary({
