@@ -20,7 +20,7 @@ export function StatsSummary({
   ).length;
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div className="bg-background rounded-lg border border-secondary p-4 flex justify-between items-center">
+      <div className="bg-background shadow-sm rounded-lg border border-secondary p-4 flex justify-between items-center">
         <div>
           <div className="text-muted-foreground text-sm">Total Connections</div>
           <div className="text-2xl font-bold text-foreground">
@@ -32,7 +32,7 @@ export function StatsSummary({
         </div>
       </div>
 
-      <div className="bg-background rounded-lg border border-secondary p-4 flex justify-between items-center">
+      <div className="bg-background shadow-sm rounded-lg border border-secondary p-4 flex justify-between items-center">
         <div>
           <div className="text-muted-foreground text-sm">Valid Tokens</div>
           <div className="text-2xl font-bold text-foreground">
@@ -44,7 +44,7 @@ export function StatsSummary({
         </div>
       </div>
 
-      <div className="bg-background rounded-lg border border-secondary p-4 flex justify-between items-center">
+      <div className="bg-background shadow-sm rounded-lg border border-secondary p-4 flex justify-between items-center">
         <div>
           <div className="text-muted-foreground text-sm">Expiring Soon</div>
           <div className="text-2xl font-bold text-foreground">
@@ -56,7 +56,7 @@ export function StatsSummary({
         </div>
       </div>
 
-      <div className="bg-background rounded-lg border border-secondary p-4 flex justify-between items-center">
+      <div className="bg-background shadow-sm rounded-lg border border-secondary p-4 flex justify-between items-center">
         <div>
           <div className="text-muted-foreground text-sm">Expired Tokens</div>
           <div className="text-2xl font-bold text-foreground">

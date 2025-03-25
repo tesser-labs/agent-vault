@@ -2,6 +2,10 @@ import { Connection } from "@/app/types";
 import StatusIndicator from "@/app/dashboard/components/StatusIndicator";
 import { Link, Clock, Key } from "lucide-react";
 import { getTokenExpirationLabel } from "@/utils/token";
+import { truncateString } from "@/utils/string";
+
+const MAX_TOKEN_DISPLAY_LENGTH = 10;
+
 export default function AccessTable({
   connectionsData,
 }: {
@@ -71,7 +75,10 @@ export default function AccessTable({
                 <div className="mr-2">
                   <Key className="h-3 w-3 text-muted-foreground" />
                 </div>
-                {connection.accessToken}
+                {truncateString(
+                  connection.accessToken,
+                  MAX_TOKEN_DISPLAY_LENGTH
+                )}
               </div>
             </td>
             <td className="px-6 py-4 hidden md:table-cell">
@@ -79,7 +86,10 @@ export default function AccessTable({
                 <div className="mr-2">
                   <Key className="h-3 w-3 text-muted-foreground" />
                 </div>
-                {connection.refreshToken}
+                {truncateString(
+                  connection.refreshToken,
+                  MAX_TOKEN_DISPLAY_LENGTH
+                )}
               </div>
             </td>
             <td className="px-6 py-4">
