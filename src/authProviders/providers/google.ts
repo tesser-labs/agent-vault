@@ -33,6 +33,7 @@ class GoogleOAuth implements AuthProvider {
       access_type: "offline",
       scope: this.scopes,
       state: options.state,
+      prompt: "consent",
     });
     return authorizeUrl;
   }
