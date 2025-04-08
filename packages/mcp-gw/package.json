@@ -9,7 +9,6 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc && chmod 755 dist/index.js",
-    "inspect": "npx -y @modelcontextprotocol/inspector node --inspect dist/index.js",
     "clean": "rm -rf dist",
     "lint": "eslint src --ext .ts,.tsx",
     "test": "vitest run",
@@ -26,10 +25,12 @@
     "vitest": "^1.0.0"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.8.0",
     "dotenv": "^16.4.7",
     "open": "^10.1.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "net": "^1.0.2",
+    "uuid": "^9.0.1",
+    "@types/uuid": "^9.0.8"
   },
   "files": [
     "dist"
