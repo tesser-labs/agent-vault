@@ -10,7 +10,7 @@ class UnAuthorizedResponse extends Response {
       status: 401,
       headers: {
         "WWW-Authenticate": "Bearer",
-        ...(authEndpoint && { "authentication-endpoint": authEndpoint }),
+        ...(authEndpoint && { "auth-endpoint": authEndpoint }),
         "Content-Type": "application/json",
       },
     });

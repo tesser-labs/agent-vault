@@ -1,0 +1,13 @@
+Gmail:
+auth:
+http://localhost:3001/auth/google?agent.name=mpc&service=gmail&redirectUrl=http://localhost:3001/dashboard
+action:
+http://localhost:3001/actions/google/gmail/messages?adid=mpc
+
+Shopify:
+auth:
+http://localhost:3001/auth/shopify?agent.name=mpc&service=products&redirectUrl=http://localhost:3001/dashboard&resource=tesser-test
+action:
+http://localhost:3001/actions/shopify/tesser-test/products?adid=mpc
+
+curl -X GET http://localhost:3001/actions

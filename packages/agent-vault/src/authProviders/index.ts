@@ -11,7 +11,7 @@ const authProviders: Record<string, AuthProvider> = {
 };
 
 const getAuthEndpoint = ({ provider }: { provider: string }) => {
-  const authEndpointURL = new URL(provider, AUTH_BASE_URL);
+  const authEndpointURL = new URL(`${AUTH_BASE_URL}/${provider}`);
   return authEndpointURL;
 };
 

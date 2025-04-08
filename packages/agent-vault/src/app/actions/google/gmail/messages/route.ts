@@ -13,8 +13,10 @@ export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
     // agent did
-    const adid = searchParams.get("adid") || undefined;
+    const agentName = searchParams.get("agent.name") || undefined;
     const resource = searchParams.get("resource") || undefined;
+    const maxResults = searchParams.get("limit") || 10;
+
     /* if (!udid) {
       return new Response(JSON.stringify({ error: "udid is required" }), {
         status: 400,
@@ -25,7 +27,6 @@ export async function GET(req: NextRequest) {
     } */
     // check if user already has a token
     // TODO: add agent authentication to retrieve Agent ID and name
-    const agentName = adid;
     const tokenStorageKey = getTokenStorageKey({
       agentName,
       provider: toolMetadata.provider,
@@ -45,7 +46,6 @@ export async function GET(req: NextRequest) {
       return new UnAuthorizedResponse({ authEndpoint });
     }
 
-    const maxResults = searchParams.get("limit") || 10;
     const oauth2Client = new google.auth.OAuth2();
     const { access_token } = tokens;
     oauth2Client.setCredentials({ access_token });

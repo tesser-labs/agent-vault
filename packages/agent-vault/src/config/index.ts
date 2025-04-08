@@ -43,6 +43,6 @@ export const config: Config = {
     basePath: "./store",
   },
   auth: {
-    baseUrl: "http://localhost:3000/auth",
+    baseUrl: "http://localhost:3001/auth",
   },
 };

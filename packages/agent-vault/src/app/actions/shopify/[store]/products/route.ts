@@ -15,7 +15,7 @@ export async function GET(
   try {
     const { store } = await params;
     const searchParams = req.nextUrl.searchParams;
-    const adid = searchParams.get("adid") || undefined;
+    const agentName = searchParams.get("agent.name") || undefined;
     const resource = store;
     /*
     if (!udid) {
@@ -38,7 +38,6 @@ export async function GET(
 
     // check if user already has a token
     // TODO: add agent authentication to retrieve Agent ID and name
-    const agentName = adid;
     const tokenStorageKey = getTokenStorageKey({
       agentName,
       provider: toolMetadata.provider,

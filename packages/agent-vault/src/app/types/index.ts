@@ -9,3 +9,11 @@ export interface Connection {
 }
 
 export type TokenStatus = "valid" | "expiring" | "expired";
+
+export type ActionMetadata = {
+  name: string;
+  logo?: string;
+  title: string;
+  description: string;
+  btnText: string;
+};
