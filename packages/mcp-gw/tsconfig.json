@@ -4,6 +4,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./src",
+    "types": ["node"],
     "paths": {
       "*": ["node_modules/*"]
     }

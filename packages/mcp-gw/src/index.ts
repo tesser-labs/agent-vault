@@ -1,24 +1,49 @@
 #!/usr/bin/env node
-import { StdioTransport } from "./transport";
-import { JsonRpcProxy } from "./proxy";
+
+import { McpGateway } from "./proxy";
+import { GatewayServer, GatewayRouter } from "./proxy";
+import type { McpProviderConfig } from "./proxy";
+import { logger } from "./logger";
 
 async function main() {
-  // Create transports for both client and server sides
-  const clientTransport = new StdioTransport();
-  const serverTransport = new StdioTransport();
+  const providersConfig: McpProviderConfig[] = [
+    {
+      namespace: "weather",
+      serverParameters: {
+        type: "stdio",
+        command: "/Users/hra/.local/bin/uv",
+        args: [
+          "--directory",
+          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
+          "run",
+          "weather.py",
+        ],
+      },
+    },
+  ];
 
-  // Create and start the proxy
-  const proxy = new JsonRpcProxy(clientTransport, serverTransport);
+  const server = new GatewayServer();
+  const router = new GatewayRouter();
+  // Create gateway instance
+  const gateway = new McpGateway(router, server);
 
-  try {
-    await proxy.start();
-  } catch (error) {
-    console.error("Fatal error:", error);
-    process.exit(1);
-  }
+  // Handle SIGINT
+  process.on("SIGINT", async () => {
+    try {
+      await gateway.stop();
+      logger.info("Gateway stopped gracefully");
+      process.exit(0);
+    } catch (error) {
+      logger.error("Error stopping gateway", { error });
+      process.exit(1);
+    }
+  });
+
+  // Create proxy instance with logging hooks
+  await gateway.start(providersConfig);
 }
 
 main().catch((error) => {
-  console.error("Unhandled error:", error);
+  logger.error("Fatal error in main", { error });
   process.exit(1);
 });
