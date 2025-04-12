@@ -18,7 +18,7 @@ import {
   isNamespacedName,
   parseNamespace,
   type Namespace,
-} from "./utility/namespace.js";
+} from "./utility/namespace";
 
 class GatewayRouter {
   providers?: Map<Namespace, McpClient>;

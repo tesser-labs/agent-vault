@@ -1,6 +1,6 @@
-import { Client as McpClient } from "@modelcontextprotocol/sdk/client/index";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio";
-import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse";
+import { Client as McpClient } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import type { Namespace } from "./utility/namespace.js";
 import { SERVER_NAME, SERVER_VERSION } from "./config.js";
 
