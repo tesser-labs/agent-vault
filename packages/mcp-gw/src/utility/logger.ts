@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 
 // Update the LogMessage interface to match MCP server's format
-export interface LogMessage {
+interface LogMessage {
   level:
     | "error"
     | "debug"
@@ -45,7 +45,7 @@ if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
 }
 
-export const logger = {
+const logger = {
   info: (message: string, metadata?: Record<string, unknown>) => {
     _logger.info(message, metadata);
   },
@@ -62,4 +62,5 @@ export const logger = {
   },
 };
 
-export default logger;
+export { logger };
+export type { LogMessage };

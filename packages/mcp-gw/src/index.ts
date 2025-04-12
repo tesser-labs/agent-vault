@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
-import { McpGateway } from "./proxy";
-import { GatewayServer, GatewayRouter } from "./proxy";
-import type { McpProviderConfig } from "./proxy";
-import { logger } from "./logger";
+import { McpGateway } from "./gateway";
+import { GatewayServer } from "./gatewayServer";
+import { GatewayRouter } from "./gatewayRouter";
+import type { McpProviderConfig } from "./providerClient";
+import { logger } from "./utility/logger";
 
 async function main() {
   const providersConfig: McpProviderConfig[] = [
     {
       namespace: "weather",
-      serverParameters: {
+      providerParameters: {
         type: "stdio",
         command: "/Users/hra/.local/bin/uv",
         args: [
