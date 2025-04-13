@@ -3,139 +3,47 @@
 import { McpGateway } from "./gateway";
 import { GatewayServer } from "./gatewayServer";
 import { GatewayRouter } from "./gatewayRouter";
-import type { McpProviderConfig } from "./providerClient";
 import { logger } from "./utility/logger";
+import { loadProviderConfigs } from "./config/configLoader";
 
 async function main() {
-  const providersConfig: McpProviderConfig[] = [
-    {
-      namespace: "weather1",
-      providerParameters: {
-        type: "stdio",
-        command: "/Users/hra/.local/bin/uv",
-        args: [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py",
-        ],
-      },
-    },
-    {
-      namespace: "weather2",
-      providerParameters: {
-        type: "stdio",
-        command: "/Users/hra/.local/bin/uv",
-        args: [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py",
-        ],
-      },
-    },
-    {
-      namespace: "weather3",
-      providerParameters: {
-        type: "stdio",
-        command: "/Users/hra/.local/bin/uv",
-        args: [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py",
-        ],
-      },
-    },
-    {
-      namespace: "weather4",
-      providerParameters: {
-        type: "stdio",
-        command: "/Users/hra/.local/bin/uv",
-        args: [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py",
-        ],
-      },
-    },
-    {
-      namespace: "weather5",
-      providerParameters: {
-        type: "stdio",
-        command: "/Users/hra/.local/bin/uv",
-        args: [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py",
-        ],
-      },
-    },
-    {
-      namespace: "weather6",
-      providerParameters: {
-        type: "stdio",
-        command: "/Users/hra/.local/bin/uv",
-        args: [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py",
-        ],
-      },
-    },
-    {
-      namespace: "weather7",
-      providerParameters: {
-        type: "stdio",
-        command: "/Users/hra/.local/bin/uv",
-        args: [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py",
-        ],
-      },
-    },
-    {
-      namespace: "weather8",
-      providerParameters: {
-        type: "stdio",
-        command: "/Users/hra/.local/bin/uv",
-        args: [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py",
-        ],
-      },
-    },
-  ];
+  try {
+    // Load provider configurations from the config file
+    const providersConfig = loadProviderConfigs(
+      "/Users/hra/Workspace/Code/tesser/secure-mcp/packages/mcp-gw/src/config/providers.json"
+    );
+    logger.info(JSON.stringify(providersConfig, null, 2));
+    const server = new GatewayServer();
+    const router = new GatewayRouter();
+    // Create gateway instance
+    const gateway = new McpGateway(router, server);
 
-  const server = new GatewayServer();
-  const router = new GatewayRouter();
-  // Create gateway instance
-  const gateway = new McpGateway(router, server);
+    // Handle SIGINT
+    process.on("SIGINT", async () => {
+      try {
+        await gateway.stop();
+        logger.info("Gateway stopped gracefully");
+        logger.flushLogsAndExit(0);
+      } catch (error) {
+        logger.error("Error stopping gateway", { error });
+        logger.flushLogsAndExit(1);
+      }
+    });
 
-  // Handle SIGINT
-  process.on("SIGINT", async () => {
-    try {
-      await gateway.stop();
-      logger.info("Gateway stopped gracefully");
-      process.exit(0);
-    } catch (error) {
-      logger.error("Error stopping gateway", { error });
-      process.exit(1);
-    }
-  });
-
-  // Create proxy instance with logging hooks
-  await gateway.start(providersConfig);
+    // Create proxy instance with logging hooks
+    await gateway.start(providersConfig);
+    logger.info(
+      "Gateway started successfully with loaded provider configurations"
+    );
+  } catch (error) {
+    console.error(error);
+    logger.error("Error starting gateway");
+    logger.flushLogsAndExit(1);
+  }
 }
 
 main().catch((error) => {
+  console.error(error);
   logger.error("Fatal error in main", { error });
-  process.exit(1);
+  logger.flushLogsAndExit(1);
 });

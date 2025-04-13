@@ -60,6 +60,13 @@ const logger = {
         : JSON.stringify(logMsg.data);
     _logger.log(level, message, logMsg._meta);
   },
+  // Function to flush logs and exit
+  flushLogsAndExit: (code: number) => {
+    _logger.on("finish", () => {
+      process.exit(code);
+    });
+    _logger.end(); // Signal Winston to finish writing logs
+  },
 };
 
 export { logger };

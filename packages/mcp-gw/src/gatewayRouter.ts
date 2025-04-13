@@ -10,7 +10,6 @@ import {
 import {
   getProviderClientTransport,
   createProviderClient,
-  type McpProviderConfig,
 } from "./providerClient.js";
 
 import {
@@ -19,6 +18,8 @@ import {
   parseNamespace,
   type Namespace,
 } from "./utility/namespace";
+
+import type { McpProviderConfig } from "./config/schema";
 
 class GatewayRouter {
   providers?: Map<Namespace, McpClient>;
