@@ -1,0 +1,72 @@
+import { Command } from "commander";
+import { GatewayServer } from "../../gatewayServer";
+import { GatewayRouter } from "../../gatewayRouter";
+import { McpGateway } from "../../gateway";
+import { logger } from "../../utility/logger";
+import { loadProvidersMap, loadWorkspaceMap } from "../../config/configLoader";
+import { Namespace } from "utility/namespace";
+import { McpProvider } from "config/schema";
+
+function getWorkspaceProviders(
+  providers: Record<string, McpProvider>,
+  workspace: Namespace[]
+) {
+  const workspaceProviders = workspace.map((wsProvider) => {
+    const provider = providers[wsProvider];
+    if (!provider) {
+      logger.error(`Provider ${wsProvider} not found`);
+    }
+    return provider;
+  });
+  return workspaceProviders;
+}
+
+async function runGateway(workspaceName: string) {
+  try {
+    const providers = loadProvidersMap();
+    const workspaces = loadWorkspaceMap();
+
+    const workspaceProviders = getWorkspaceProviders(
+      providers,
+      workspaces[workspaceName]
+    );
+
+    logger.info(JSON.stringify(workspaceProviders, null, 2));
+    const server = new GatewayServer();
+    const router = new GatewayRouter();
+    // Create gateway instance
+    const gateway = new McpGateway(router, server);
+
+    // Handle SIGINT
+    process.on("SIGINT", async () => {
+      try {
+        await gateway.stop();
+        logger.info("Gateway stopped gracefully");
+        logger.flushLogsAndExit(0);
+      } catch (error) {
+        logger.error("Error stopping gateway", { error });
+        logger.flushLogsAndExit(1);
+      }
+    });
+
+    // Create proxy instance with logging hooks
+    await gateway.start(workspaceProviders);
+    logger.info(
+      "Gateway started successfully with loaded provider configurations"
+    );
+  } catch (error) {
+    console.error(error);
+    logger.error("Error starting gateway");
+    logger.flushLogsAndExit(1);
+  }
+}
+
+export function runCommand(program: Command) {
+  program
+    .command("run")
+    .description("Run the gateway with a given workspace")
+    .argument("<workspace-name>", "name of the workspace to run")
+    .action((name) => {
+      runGateway(name);
+    });
+}

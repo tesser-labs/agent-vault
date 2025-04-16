@@ -1,21 +1,18 @@
 import { Client as McpClient } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
-import { SERVER_NAME, SERVER_VERSION } from "./config.js";
-import { ProviderParameters } from "./config/schema.js";
+import { SERVER_NAME, SERVER_VERSION } from "./config";
+import { McpProvider } from "./config/schema";
+import { isStdioConfig, isSSEConfig } from "./config/schema";
 
-function getProviderClientTransport(providerParameters: ProviderParameters) {
-  switch (providerParameters.type) {
-    case "stdio": {
-      return new StdioClientTransport(providerParameters);
-    }
-    case "sse":
-      return new SSEClientTransport(new URL(providerParameters.url));
-    default:
-      throw new Error(
-        `Unsupported provider type: ${(providerParameters as any).type}`
-      );
+function getProviderClientTransport(mcpConfig: McpProvider) {
+  if (isStdioConfig(mcpConfig)) {
+    return new StdioClientTransport(mcpConfig.providerParameters);
   }
+  if (isSSEConfig(mcpConfig)) {
+    return new SSEClientTransport(new URL(mcpConfig.providerParameters.url));
+  }
+  throw new Error(`Unsupported provider type: ${mcpConfig.type}`);
 }
 
 async function createProviderClient(

@@ -8,7 +8,7 @@ import {
   ListPromptsResult,
   GetPromptResult,
 } from "@modelcontextprotocol/sdk/types.js";
-import type { McpProviderConfig } from "./config/schema";
+import type { McpProvider } from "./config/schema";
 import { GatewayServer } from "./gatewayServer.js";
 import { GatewayRouter } from "./gatewayRouter.js";
 import { logger } from "./utility/logger.js";
@@ -143,7 +143,7 @@ class McpGateway {
     private setResourceRequestHandler() {} // TODO: implement support for resources
     */
 
-  async start(providersConfig: McpProviderConfig[]) {
+  async start(providersConfig: McpProvider[]) {
     // first set the handlers. This should be done before starting the server and router
     this.setToolRequestHandler();
     this.setPromptRequestHandler();

@@ -19,19 +19,19 @@ import {
   type Namespace,
 } from "./utility/namespace";
 
-import type { McpProviderConfig } from "./config/schema";
+import type { McpProvider } from "./config/schema.js";
 
 class GatewayRouter {
   providers?: Map<Namespace, McpClient>;
 
   // Connect to MCP providers
-  async connect(providersConfig: McpProviderConfig[]) {
+  async connect(providersConfig: McpProvider[]) {
     this.providers = new Map();
     // iterate and connect  MCP providers
     const providerPromises = [];
     for (const providerConfig of providersConfig) {
-      const { namespace, providerParameters } = providerConfig;
-      const transport = getProviderClientTransport(providerParameters);
+      const transport = getProviderClientTransport(providerConfig);
+      const { namespace } = providerConfig;
       const providerPromise = createProviderClient(transport).then(
         (provider) => ({
           namespace,
@@ -144,7 +144,7 @@ class GatewayRouter {
     return await provider.request(request, GetPromptResultSchema);
   }
 
-  async start(providersConfig: McpProviderConfig[]) {
+  async start(providersConfig: McpProvider[]) {
     await this.connect(providersConfig);
   }
 

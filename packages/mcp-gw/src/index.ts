@@ -1,49 +1,21 @@
 #!/usr/bin/env node
 
-import { McpGateway } from "./gateway";
-import { GatewayServer } from "./gatewayServer";
-import { GatewayRouter } from "./gatewayRouter";
-import { logger } from "./utility/logger";
-import { loadProviderConfigs } from "./config/configLoader";
+import { Command } from "commander";
+import { serverCommands } from "./cli/commands/server";
+import { workspaceCommands } from "./cli/commands/workspace";
+import { runCommand } from "./cli/commands/run";
 
-async function main() {
-  try {
-    // Load provider configurations from the config file
-    const providersConfig = loadProviderConfigs(
-      "/Users/hra/Workspace/Code/tesser/secure-mcp/packages/mcp-gw/src/config/providers.json"
-    );
-    logger.info(JSON.stringify(providersConfig, null, 2));
-    const server = new GatewayServer();
-    const router = new GatewayRouter();
-    // Create gateway instance
-    const gateway = new McpGateway(router, server);
+const program = new Command();
 
-    // Handle SIGINT
-    process.on("SIGINT", async () => {
-      try {
-        await gateway.stop();
-        logger.info("Gateway stopped gracefully");
-        logger.flushLogsAndExit(0);
-      } catch (error) {
-        logger.error("Error stopping gateway", { error });
-        logger.flushLogsAndExit(1);
-      }
-    });
+program.name("mcp-gateway").description("MCP Gateway CLI").version("1.0.0");
 
-    // Create proxy instance with logging hooks
-    await gateway.start(providersConfig);
-    logger.info(
-      "Gateway started successfully with loaded provider configurations"
-    );
-  } catch (error) {
-    console.error(error);
-    logger.error("Error starting gateway");
-    logger.flushLogsAndExit(1);
-  }
-}
+// Add server commands
+serverCommands(program);
 
-main().catch((error) => {
-  console.error(error);
-  logger.error("Fatal error in main", { error });
-  logger.flushLogsAndExit(1);
-});
+// Add workspace commands
+workspaceCommands(program);
+
+// Add run command
+runCommand(program);
+
+program.parse(process.argv);

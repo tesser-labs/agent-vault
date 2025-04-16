@@ -1,108 +1,47 @@
 {
-  "providers": [
-    {
-      "namespace": "weather1",
-      "providerParameters": {
-        "type": "stdio",
-        "command": "/Users/hra/.local/bin/uv",
-        "args": [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py"
-        ]
-      }
-    },
-    {
-      "namespace": "weather2",
-      "providerParameters": {
-        "type": "stdio",
-        "command": "/Users/hra/.local/bin/uv",
-        "args": [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py"
-        ]
-      }
-    },
-    {
-      "namespace": "weather3",
-      "providerParameters": {
-        "type": "stdio",
-        "command": "/Users/hra/.local/bin/uv",
-        "args": [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py"
-        ]
-      }
-    },
-    {
-      "namespace": "weather4",
-      "providerParameters": {
-        "type": "stdio",
-        "command": "/Users/hra/.local/bin/uv",
-        "args": [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py"
-        ]
-      }
-    },
-    {
-      "namespace": "weather5",
-      "providerParameters": {
-        "type": "stdio",
-        "command": "/Users/hra/.local/bin/uv",
-        "args": [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py"
-        ]
-      }
-    },
-    {
-      "namespace": "weather6",
-      "providerParameters": {
-        "type": "stdio",
-        "command": "/Users/hra/.local/bin/uv",
-        "args": [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py"
-        ]
-      }
-    },
-    {
-      "namespace": "weather7",
-      "providerParameters": {
-        "type": "stdio",
-        "command": "/Users/hra/.local/bin/uv",
-        "args": [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py"
-        ]
-      }
-    },
-    {
-      "namespace": "weather8",
-      "providerParameters": {
-        "type": "stdio",
-        "command": "/Users/hra/.local/bin/uv",
-        "args": [
-          "--directory",
-          "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
-          "run",
-          "weather.py"
-        ]
-      }
-    }
-  ]
+  "weather1": {
+    "command": "/Users/hra/.local/bin/uv",
+    "args": [
+      "--directory",
+      "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
+      "run",
+      "weather.py"
+    ]
+  },
+  "weather2": {
+    "command": "/Users/hra/.local/bin/uv",
+    "args": [
+      "--directory",
+      "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
+      "run",
+      "weather.py"
+    ]
+  },
+  "weather3": {
+    "command": "/Users/hra/.local/bin/uv",
+    "args": [
+      "--directory",
+      "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
+      "run",
+      "weather.py"
+    ]
+  },
+  "weather4": {
+    "command": "/Users/hra/.local/bin/uv",
+    "args": [
+      "--directory",
+      "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
+      "run",
+      "weather.py"
+    ]
+  },
+  "weather5": {
+    "command": "/Users/hra/.local/bin/uv",
+    "args": [
+      "--directory",
+      "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
+      "run",
+      "weather.py"
+    ]
+  }
 }
