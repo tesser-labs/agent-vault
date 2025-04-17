@@ -29,12 +29,17 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.9.0",
+    "boxen": "^8.0.1",
+    "chalk": "^5.4.1",
     "commander": "^13.1.0",
     "dotenv": "^16.4.7",
     "enquirer": "^2.4.1",
     "net": "^1.0.2",
     "open": "^10.1.0",
+    "ora": "^8.2.0",
     "prompts": "^2.4.2",
+    "treeify": "^1.1.0",
+    "tsx": "^4.19.3",
     "uuid": "^9.0.1",
     "winston": "^3.17.0",
     "zod": "^3.24.2"

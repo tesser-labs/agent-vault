@@ -1,9 +1,9 @@
 import { Command } from "commander";
-import { GatewayServer } from "../../gatewayServer";
-import { GatewayRouter } from "../../gatewayRouter";
-import { McpGateway } from "../../gateway";
-import { logger } from "../../utility/logger";
-import { loadProvidersMap, loadWorkspaceMap } from "../../config/configLoader";
+import { GatewayServer } from "../gatewayServer";
+import { GatewayRouter } from "../gatewayRouter";
+import { McpGateway } from "../gateway";
+import { logger } from "../utility/logger";
+import { loadProvidersMap, loadWorkspaceMap } from "../config/configLoader";
 import { Namespace } from "utility/namespace";
 import { McpProvider } from "config/schema";
 
@@ -25,6 +25,11 @@ async function runGateway(workspaceName: string) {
   try {
     const providers = loadProvidersMap();
     const workspaces = loadWorkspaceMap();
+
+    if (!workspaces[workspaceName]) {
+      logger.error(`Workspace ${workspaceName} not found`);
+      throw new Error(`Workspace ${workspaceName} not found`);
+    }
 
     const workspaceProviders = getWorkspaceProviders(
       providers,

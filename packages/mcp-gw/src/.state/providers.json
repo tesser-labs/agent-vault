@@ -1,0 +1,67 @@
+{
+  "weather1": {
+    "namespace": "weather1",
+    "type": "stdio",
+    "providerParameters": {
+      "command": "/Users/hra/.local/bin/uv",
+      "args": [
+        "--directory",
+        "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
+        "run",
+        "weather.py"
+      ]
+    }
+  },
+  "weather2": {
+    "namespace": "weather2",
+    "type": "stdio",
+    "providerParameters": {
+      "command": "/Users/hra/.local/bin/uv",
+      "args": [
+        "--directory",
+        "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
+        "run",
+        "weather.py"
+      ]
+    }
+  },
+  "weather3": {
+    "namespace": "weather3",
+    "type": "stdio",
+    "providerParameters": {
+      "command": "/Users/hra/.local/bin/uv",
+      "args": [
+        "--directory",
+        "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
+        "run",
+        "weather.py"
+      ]
+    }
+  },
+  "weather4": {
+    "namespace": "weather4",
+    "type": "stdio",
+    "providerParameters": {
+      "command": "/Users/hra/.local/bin/uv",
+      "args": [
+        "--directory",
+        "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
+        "run",
+        "weather.py"
+      ]
+    }
+  },
+  "weather5": {
+    "namespace": "weather5",
+    "type": "stdio",
+    "providerParameters": {
+      "command": "/Users/hra/.local/bin/uv",
+      "args": [
+        "--directory",
+        "/Users/hra/Workspace/Code/agent-playground/MCP/server/weather",
+        "run",
+        "weather.py"
+      ]
+    }
+  }
+}

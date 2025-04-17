@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { serverCommands } from "./cli/commands/server";
-import { workspaceCommands } from "./cli/commands/workspace";
-import { runCommand } from "./cli/commands/run";
+import { serverCommands } from "./cli/server/server";
+import { workspaceCommands } from "./cli/workspace/workspace";
+import { runCommand } from "./cli/run";
 
 const program = new Command();
 
