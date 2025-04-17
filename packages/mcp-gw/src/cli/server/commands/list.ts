@@ -1,7 +1,10 @@
 import chalk from "chalk";
-import { McpProvider, isStdioConfig, isSSEConfig } from "../../../store/schema";
+import prompts from "prompts";
+import { McpProvider } from "../../../store/schema";
+import { buildProviderTree } from "../../utils";
+import treeify from "treeify";
 
-export function printProviders(providers: McpProvider[]) {
+export async function printProviders(providers: McpProvider[]) {
   if (providers.length === 0) {
     console.log(chalk.yellow("No MCP providers configured"));
     return;
@@ -10,25 +13,49 @@ export function printProviders(providers: McpProvider[]) {
   console.log(chalk.bold("\nConfigured MCP Providers:"));
   console.log(chalk.dim("----------------------"));
 
-  providers.forEach((provider) => {
-    console.log(chalk.bold(`\nName: ${provider.namespace}`));
-    console.log(chalk.cyan(`Type: ${provider.type}`));
-
-    if (isStdioConfig(provider)) {
-      console.log(`Command: ${provider.providerParameters.command}`);
-      if (provider.providerParameters.args?.length) {
-        console.log(`Args: ${provider.providerParameters.args.join(" ")}`);
-      }
-      const envVars = provider.providerParameters.env;
-      if (Object.keys(envVars || {}).length > 0) {
-        console.log("Environment Variables:");
-        Object.entries(envVars || {}).forEach(([key, value]) => {
-          console.log(chalk.dim(`  ${key}=${value}`));
-        });
-      }
-    } else if (isSSEConfig(provider)) {
-      console.log(`URL: ${provider.providerParameters.url}`);
-    }
+  // Create provider selection options
+  const providerOptions = providers.map((provider) => {
+    const tree = buildProviderTree(provider);
+    return {
+      title: `${provider.namespace} (${provider.type})`,
+      value: provider,
+      description: `${treeify.asTree(tree, true, true)}`,
+    };
   });
-  console.log("\n");
+
+  // Handle CTRL+C gracefully
+  const onCancel = () => {
+    console.log(chalk.yellow("\nProvider viewing cancelled."));
+    process.exit(0);
+  };
+
+  // Show initial list of providers
+  providers.forEach((provider) => {
+    console.log(
+      `  ${chalk.green("•")} ${chalk.cyan(provider.namespace)} - ${chalk.dim(
+        provider.type
+      )}`
+    );
+  });
+
+  // Provider selection prompt
+  const response = await prompts(
+    {
+      type: "select",
+      name: "selectedProvider",
+      message: "Select a provider to view details:",
+      choices: providerOptions,
+      hint: "- Use arrow-keys. Return to select. Ctrl+C to exit",
+    },
+    { onCancel }
+  );
+
+  if (response.selectedProvider) {
+    const tree = buildProviderTree(response.selectedProvider);
+
+    console.log("\nProvider Details:");
+    console.log(chalk.dim("---------------"));
+    console.log(treeify.asTree(tree, true, true));
+    console.log("\n");
+  }
 }

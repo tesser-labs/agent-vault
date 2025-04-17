@@ -9,7 +9,7 @@ import { loadProviderConfigFile } from "../../store/loader";
 import prompts from "prompts";
 import { addProvider } from "./commands/add";
 import { printProviders } from "./commands/list";
-import { parseProviderParameters } from "./commands/utils";
+import { parseProviderParameters } from "../utils";
 export function serverCommands(program: Command) {
   const server = program.command("server").description("Manage MCP providers");
 

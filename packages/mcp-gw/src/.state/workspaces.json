@@ -4,7 +4,14 @@
     "weather4"
   ],
   "cursor": [
+    "weather3",
+    "weather4",
+    "weather5"
+  ],
+  "test": [
     "weather1",
+    "weather2",
+    "weather3",
     "weather4",
     "weather5"
   ]

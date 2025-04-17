@@ -4,22 +4,7 @@ import { GatewayRouter } from "../gatewayRouter";
 import { McpGateway } from "../gateway";
 import { logger } from "../utility/logger";
 import { loadProvidersMap, loadWorkspaceMap } from "../store/loader";
-import { Namespace } from "utility/namespace";
-import { McpProvider } from "store/schema";
-
-function getWorkspaceProviders(
-  providers: Record<string, McpProvider>,
-  workspace: Namespace[]
-) {
-  const workspaceProviders = workspace.map((wsProvider) => {
-    const provider = providers[wsProvider];
-    if (!provider) {
-      logger.error(`Provider ${wsProvider} not found`);
-    }
-    return provider;
-  });
-  return workspaceProviders;
-}
+import { getWorkspaceProviders } from "./utils";
 
 async function runGateway(workspaceName: string) {
   try {

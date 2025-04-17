@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { addMcpProviders } from "../../../store/provider";
 import { McpProvider } from "../../../store/schema";
 import prompts from "prompts";
-import { parseProviderParameters } from "./utils";
+import { parseProviderParameters } from "../../utils";
 
 export async function addProvider() {
   const providerType = await prompts({

@@ -25,7 +25,8 @@ export function workspaceCommands(program: Command) {
     .description("List workspaces")
     .action(async (options) => {
       const workspaces = getWorkspaces();
-      listWorkspace(workspaces, options.name);
+      const providers = loadProvidersMap();
+      listWorkspace(workspaces, providers, options.name);
     });
 
   workspace
