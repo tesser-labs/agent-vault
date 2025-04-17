@@ -4,8 +4,8 @@ import {
   addMcpProviders,
   getMcpProviders,
   removeMcpProvider,
-} from "../../config/configStore";
-import { loadProviderConfigFile } from "../../config/configLoader";
+} from "../../store/provider";
+import { loadProviderConfigFile } from "../../store/loader";
 import prompts from "prompts";
 import { addProvider } from "./commands/add";
 import { printProviders } from "./commands/list";
@@ -78,6 +78,13 @@ export function serverCommands(program: Command) {
     .option("--config <path>", "path to the config file")
     .action((options) => {
       const providers = loadProviderConfigFile(options.config);
+      if (providers?.length === 0) {
+        console.error(
+          chalk.red(
+            "Failed to load provider configuration. The file is not valid or does not exist"
+          )
+        );
+      }
       addMcpProviders(providers);
       console.log(
         chalk.green("✔ Provider configuration imported successfully")

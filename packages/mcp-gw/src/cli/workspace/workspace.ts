@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import prompts from "prompts";
-import { removeWorkspace, getWorkspaces } from "../../config/configStore";
-import { loadProvidersMap } from "../../config/configLoader";
+import { removeWorkspace, getWorkspaces } from "../../store/workspace";
+import { loadProvidersMap } from "../../store/loader";
 import { createWorkspace } from "./commands/create";
 import { listWorkspace } from "./commands/list";
 import { editWorkspaces } from "./commands/edit";

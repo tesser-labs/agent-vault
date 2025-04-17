@@ -1,9 +1,5 @@
 import chalk from "chalk";
-import {
-  McpProvider,
-  isStdioConfig,
-  isSSEConfig,
-} from "../../../config/schema";
+import { McpProvider, isStdioConfig, isSSEConfig } from "../../../store/schema";
 
 export function printProviders(providers: McpProvider[]) {
   if (providers.length === 0) {

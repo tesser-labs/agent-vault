@@ -8,7 +8,7 @@ import {
   ListPromptsResult,
   GetPromptResult,
 } from "@modelcontextprotocol/sdk/types.js";
-import type { McpProvider } from "./config/schema";
+import type { McpProvider } from "./store/schema";
 import { GatewayServer } from "./gatewayServer.js";
 import { GatewayRouter } from "./gatewayRouter.js";
 import { logger } from "./utility/logger.js";

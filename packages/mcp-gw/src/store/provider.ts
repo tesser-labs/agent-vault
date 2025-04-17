@@ -1,9 +1,4 @@
-import {
-  loadProvidersMap,
-  loadWorkspaceMap,
-  saveProviders,
-  saveWorkspaceMap,
-} from "./configLoader";
+import { loadProvidersMap, saveProviders } from "./loader";
 import type { McpProvider } from "./schema";
 
 export function addMcpProviders(providers: McpProvider[]) {
@@ -28,22 +23,5 @@ export function removeMcpProvider(name: string) {
 
 export function getMcpProviders() {
   const config = loadProvidersMap();
-  return config;
-}
-
-export function addWorkspace(name: string, providerNames: string[]) {
-  let config = loadWorkspaceMap();
-  config = { ...config, [name]: providerNames };
-  saveWorkspaceMap(config);
-}
-
-export function removeWorkspace(name: string) {
-  let config = loadWorkspaceMap();
-  delete config[name];
-  saveWorkspaceMap(config);
-}
-
-export function getWorkspaces() {
-  const config = loadWorkspaceMap();
   return config;
 }

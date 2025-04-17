@@ -1,4 +1,4 @@
-import { McpProvider } from "../../../config/schema";
+import { McpProvider } from "../../../store/schema";
 
 export function parseProviderParameters(
   name: string,

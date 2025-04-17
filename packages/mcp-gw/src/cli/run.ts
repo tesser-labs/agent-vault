@@ -3,9 +3,9 @@ import { GatewayServer } from "../gatewayServer";
 import { GatewayRouter } from "../gatewayRouter";
 import { McpGateway } from "../gateway";
 import { logger } from "../utility/logger";
-import { loadProvidersMap, loadWorkspaceMap } from "../config/configLoader";
+import { loadProvidersMap, loadWorkspaceMap } from "../store/loader";
 import { Namespace } from "utility/namespace";
-import { McpProvider } from "config/schema";
+import { McpProvider } from "store/schema";
 
 function getWorkspaceProviders(
   providers: Record<string, McpProvider>,

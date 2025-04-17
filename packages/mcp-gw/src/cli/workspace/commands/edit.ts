@@ -3,8 +3,8 @@ import chalk from "chalk";
 import ora from "ora";
 import boxen from "boxen";
 
-import { McpProvider } from "../../../config/schema";
-import { addWorkspace } from "../../../config/configStore";
+import { McpProvider } from "../../../store/schema";
+import { addWorkspace } from "../../../store/workspace";
 
 export async function editWorkspaces(
   workspaces: Record<string, string[]>,

@@ -19,7 +19,7 @@ import {
   type Namespace,
 } from "./utility/namespace";
 
-import type { McpProvider } from "./config/schema.js";
+import type { McpProvider } from "./store/schema.js";
 
 class GatewayRouter {
   providers?: Map<Namespace, McpClient>;

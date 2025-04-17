@@ -1,6 +1,6 @@
 import chalk from "chalk";
-import { addMcpProviders } from "../../../config/configStore";
-import { McpProvider } from "../../../config/schema";
+import { addMcpProviders } from "../../../store/provider";
+import { McpProvider } from "../../../store/schema";
 import prompts from "prompts";
 import { parseProviderParameters } from "./utils";
 
